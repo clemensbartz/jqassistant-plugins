@@ -1,0 +1,24 @@
+name: Default
+on: [push, pull_request, release]
+
+jobs:
+  default:
+    name: Default Job
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 9 ]
+    steps:
+      - name: Use Java ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+          java-package: jdk
+          architecture: x64
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Make gradle executable
+        run: chmod +x gradlew
+      - name: Install
+        run: ./gradlew clean install check jTR jqa
